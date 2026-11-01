@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+# derived index artifacts (rebuild with `python cli.py index`)
+.index/
+.index-hedge-fund/
+
+# foreign test repo (third-party clone, used only as eval fodder)
+ai-hedge-fund/

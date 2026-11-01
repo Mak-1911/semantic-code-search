@@ -1,0 +1,24 @@
+{"query": "get a one-shot text completion for a prompt", "expected_path": "src/llm/llmservice.py", "expected_symbol": "get_completion", "difficulty": "medium"}
+{"query": "is the stock cheap or expensive compared to its average?", "expected_path": "src/agents/valuation_analyst.py", "expected_symbol": "analyze", "difficulty": "medium"}
+{"query": "interactive menu to pick an agent", "expected_path": "src/main.py", "expected_symbol": "choose_agent_interactively", "difficulty": "easy"}
+{"query": "compute sharpe ratio, drawdown and returns for a ticker", "expected_path": "src/metrics/runner.py", "expected_symbol": "process", "difficulty": "easy"}
+{"query": "how do all the pieces fit together?", "expected_path": "src/documentations/hld.md", "expected_symbol": "", "difficulty": "trap"}
+{"query": "replay the strategy day by day over past prices", "expected_path": "src/backtest/engine.py", "expected_symbol": "run_backtest", "difficulty": "medium"}
+{"query": "record a filled order and update the ledger", "expected_path": "src/backtest/backtester.py", "expected_symbol": "execute_trade", "difficulty": "trap"}
+{"query": "the agent that avoids stocks that swing wildly", "expected_path": "src/agents/warren_buffet.py", "expected_symbol": "analyze", "difficulty": "medium"}
+{"query": "the momentum agent using a 30 day moving average", "expected_path": "src/agents/rakesh_jhunjhunwala.py", "expected_symbol": "analyze", "difficulty": "easy"}
+{"query": "how much money did we make overall?", "expected_path": "src/metrics/performance.py", "expected_symbol": "cumulative_return", "difficulty": "trap"}
+{"query": "tally the votes and announce the final verdict", "expected_path": "src/graph/workflow.py", "expected_symbol": "decision_node", "difficulty": "trap"}
+{"query": "command line options for running an analysis", "expected_path": "src/main.py", "expected_symbol": "main", "difficulty": "medium"}
+{"query": "the client class that talks to OpenAI-compatible APIs", "expected_path": "src/llm/llmservice.py", "expected_symbol": "OpenAIService", "difficulty": "easy"}
+{"query": "what fields does the langgraph state hold?", "expected_path": "src/graph/workflow.py", "expected_symbol": "GraphState", "difficulty": "easy"}
+{"query": "print the backtest performance summary", "expected_path": "src/main.py", "expected_symbol": "summarize_performance", "difficulty": "medium"}
+{"query": "measure how volatile a stock is before allowing the trade", "expected_path": "src/risk/manager.py", "expected_symbol": "process", "difficulty": "medium"}
+{"query": "turn a price series into daily percentage moves", "expected_path": "src/metrics/performance.py", "expected_symbol": "compute_returns", "difficulty": "medium"}
+{"query": "combine agent votes into one BUY/SELL/HOLD call", "expected_path": "src/backtest/backtester.py", "expected_symbol": "aggregate_decisions", "difficulty": "medium"}
+{"query": "the component that decides if a stock is too risky", "expected_path": "src/risk/manager.py", "expected_symbol": "RiskManager", "difficulty": "medium"}
+{"query": "langgraph node that runs risk analysis", "expected_path": "src/graph/workflow.py", "expected_symbol": "risk_node", "difficulty": "easy"}
+{"query": "where is the OpenRouter base url set?", "expected_path": "src/llm/llmservice.py", "expected_symbol": "__init__", "difficulty": "easy"}
+{"query": "the daily loop asking every agent for its signal", "expected_path": "src/backtest/backtester.py", "expected_symbol": "run", "difficulty": "medium"}
+{"query": "let the state model accept arbitrary types", "expected_path": "src/graph/state.py", "expected_symbol": "Config", "difficulty": "medium"}
+{"query": "what's the current quote for a ticker?", "expected_path": "src/tools/api.py", "expected_symbol": "get_latest_price", "difficulty": "trap"}

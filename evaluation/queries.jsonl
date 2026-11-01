@@ -1,0 +1,42 @@
+{"query": "how does the chunker handle decorated function?", "expected_path": "indexer/chunker.py", "expected_symbol": "_walk", "difficulty": "trap"}
+{"query": "where do we skip directories when walking the repository?", "expected_path": "indexer/repo_reader.py", "expected_symbol": "read_repository", "difficulty": "easy"}
+{"query": "how are .venv and node_modules excluded from indexing?", "expected_path": "indexer/repo_reader.py", "expected_symbol": "read_repository", "difficulty": "easy"}
+{"query": "make sure virtual environments don't get indexed", "expected_path": "indexer/repo_reader.py", "expected_symbol": "read_repository", "difficulty": "medium"}
+{"query": "the file crawler", "expected_path": "indexer/repo_reader.py", "expected_symbol": "read_repository", "difficulty": "trap"}
+{"query": "which files are eligible for the search index?", "expected_path": "indexer/repo_reader.py", "expected_symbol": "read_repository", "difficulty": "medium"}
+{"query": "where do we traverse the syntax tree to find definitions?", "expected_path": "indexer/chunker.py", "expected_symbol": "_walk", "difficulty": "easy"}
+{"query": "recursion over the parse tree", "expected_path": "indexer/chunker.py", "expected_symbol": "_walk", "difficulty": "trap"}
+{"query": "what happens to files that cannot be parsed?", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "medium"}
+{"query": "how do we chunk markdown files?", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "trap"}
+{"query": "split a file into fixed-size windows of lines", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "easy"}
+{"query": "which function processes every file in the repository?", "expected_path": "indexer/chunker.py", "expected_symbol": "chunk_repo", "difficulty": "medium"}
+{"query": "where is python source parsed into a syntax tree?", "expected_path": "indexer/chunker.py", "expected_symbol": "chunk_source", "difficulty": "easy"}
+{"query": "how does one file become a list of chunks?", "expected_path": "indexer/chunker.py", "expected_symbol": "chunk_file", "difficulty": "medium"}
+{"query": "where are Chunk objects created?", "expected_path": "indexer/chunker.py", "expected_symbol": "_emit", "difficulty": "easy"}
+{"query": "how do we extract the name of a definition node?", "expected_path": "indexer/chunker.py", "expected_symbol": "_node_name", "difficulty": "easy"}
+{"query": "what fields does a chunk have?", "expected_path": "indexer/chunker.py", "expected_symbol": "Chunk", "difficulty": "easy"}
+{"query": "where is the embedding model loaded into memory?", "expected_path": "indexer/embedder.py", "expected_symbol": "Embedder", "difficulty": "easy"}
+{"query": "why is the model loaded in float32?", "expected_path": "indexer/embedder.py", "expected_symbol": "Embedder", "difficulty": "trap"}
+{"query": "how are chunk texts turned into vectors?", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_texts", "difficulty": "easy"}
+{"query": "encode a batch of texts as embeddings", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_texts", "difficulty": "medium"}
+{"query": "how are search queries embedded differently from code chunks?", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_query", "difficulty": "medium"}
+{"query": "where is the instruction prefix added?", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_query", "difficulty": "easy"}
+{"query": "how is the embedding input text composed from a chunk?", "expected_path": "indexer/embedder.py", "expected_symbol": "chunk_to_text", "difficulty": "medium"}
+{"query": "how are vectors saved to disk?", "expected_path": "storage/baseline.py", "expected_symbol": "save_index", "difficulty": "easy"}
+{"query": "write the index into the .index directory", "expected_path": "storage/baseline.py", "expected_symbol": "save_index", "difficulty": "medium"}
+{"query": "how does search load the saved index?", "expected_path": "storage/baseline.py", "expected_symbol": "load_index", "difficulty": "easy"}
+{"query": "refuse to load an index built with a different model", "expected_path": "storage/baseline.py", "expected_symbol": "load_index", "difficulty": "trap"}
+{"query": "how does the cli compute the top 5 results?", "expected_path": "cli.py", "expected_symbol": "cmd_search", "difficulty": "medium"}
+{"query": "the command that indexes a repository", "expected_path": "cli.py", "expected_symbol": "cmd_index", "difficulty": "easy"}
+{"query": "where do we measure how long embedding takes?", "expected_path": "cli.py", "expected_symbol": "cmd_index", "difficulty": "medium"}
+{"query": "cosine similarity against all vectors", "expected_path": "cli.py", "expected_symbol": "cmd_search", "difficulty": "trap"}
+{"query": "where do we print chunk statistics?", "expected_path": "indexer/chunker.py", "expected_symbol": "print_stats", "difficulty": "easy"}
+{"query": "print the syntax tree structure for debugging", "expected_path": "tests/smoke_ts.py", "expected_symbol": "dump", "difficulty": "medium"}
+{"query": "what does repo_reader.py do?", "expected_path": "indexer/repo_reader.py", "expected_symbol": "", "difficulty": "easy"}
+{"query": "project design notes and decision log", "expected_path": "docs/design-notes.md", "expected_symbol": "", "difficulty": "medium"}
+{"query": "how do we sample memory usage during indexing?", "expected_path": "cli.py", "expected_symbol": "track_peak_rss", "difficulty": "medium"}
+{"query": "watch the RAM while the model runs", "expected_path": "cli.py", "expected_symbol": "track_peak_rss", "difficulty": "trap"}
+{"query": "how does the eval decide if a result is correct?", "expected_path": "evaluation/run_eval.py", "expected_symbol": "grade", "difficulty": "medium"}
+{"query": "where are recall and MRR calculated?", "expected_path": "evaluation/run_eval.py", "expected_symbol": "metrics", "difficulty": "easy"}
+{"query": "how does the chunker read the contents of a file?", "expected_path": "indexer/chunker.py", "expected_symbol": "read_file", "difficulty": "easy"}
+{"query": "where are the command line arguments parsed?", "expected_path": "cli.py", "expected_symbol": "main", "difficulty": "easy"}
