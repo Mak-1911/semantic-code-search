@@ -1,0 +1,393 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]Loading weights:  10%|#         | 31/310 [00:00<00:00, 288.36it/s]Loading weights:  21%|##        | 64/310 [00:00<00:00, 309.55it/s]Loading weights:  31%|###       | 96/310 [00:00<00:00, 303.28it/s]Loading weights:  41%|####      | 127/310 [00:00<00:00, 268.87it/s]Loading weights:  50%|#####     | 155/310 [00:00<00:00, 234.66it/s]Loading weights:  58%|#####8    | 180/310 [00:00<00:00, 236.60it/s]Loading weights:  66%|######6   | 205/310 [00:00<00:00, 237.22it/s]Loading weights:  74%|#######4  | 230/310 [00:00<00:00, 227.67it/s]Loading weights:  83%|########2 | 257/310 [00:01<00:00, 231.35it/s]Loading weights:  91%|######### | 281/310 [00:01<00:00, 230.04it/s]Loading weights: 100%|##########| 310/310 [00:01<00:00, 248.45it/s]
+RSS: 2759 MB
+
+stage attribution (pool=20, dense only):
+  [trap  ] dense=   2  final=   2  same          how does the chunker handle decorated function?
+  [easy  ] dense=   1  final=   1  same          where do we skip directories when walking the repository?
+  [easy  ] dense=   1  final=   1  same          how are .venv and node_modules excluded from indexing?
+  [medium] dense=   9  final=None  outside_top5  make sure virtual environments don't get indexed
+  [trap  ] dense=  18  final=None  outside_top5  the file crawler
+  [medium] dense=   1  final=   1  same          which files are eligible for the search index?
+  [easy  ] dense=   1  final=   1  same          where do we traverse the syntax tree to find definitions?
+  [trap  ] dense=   2  final=   2  same          recursion over the parse tree
+  [medium] dense=   3  final=   3  same          what happens to files that cannot be parsed?
+  [trap  ] dense=   8  final=None  outside_top5  how do we chunk markdown files?
+  [easy  ] dense=   2  final=   2  same          split a file into fixed-size windows of lines
+  [medium] dense=   2  final=   2  same          which function processes every file in the repository?
+  [easy  ] dense=   1  final=   1  same          where is python source parsed into a syntax tree?
+  [medium] dense=   1  final=   1  same          how does one file become a list of chunks?
+  [easy  ] dense=   4  final=   4  same          where are Chunk objects created?
+  [easy  ] dense=   1  final=   1  same          how do we extract the name of a definition node?
+  [easy  ] dense=   1  final=   1  same          what fields does a chunk have?
+  [easy  ] dense=   1  final=   1  same          where is the embedding model loaded into memory?
+  [trap  ] dense=   6  final=None  outside_top5  why is the model loaded in float32?
+  [easy  ] dense=   3  final=   3  same          how are chunk texts turned into vectors?
+  [medium] dense=   1  final=   1  same          encode a batch of texts as embeddings
+  [medium] dense=  13  final=None  outside_top5  how are search queries embedded differently from code chunks?
+  [easy  ] dense=   8  final=None  outside_top5  where is the instruction prefix added?
+  [medium] dense=   1  final=   1  same          how is the embedding input text composed from a chunk?
+  [easy  ] dense=   1  final=   1  same          how are vectors saved to disk?
+  [medium] dense=   1  final=   1  same          write the index into the .index directory
+  [easy  ] dense=   2  final=   2  same          how does search load the saved index?
+  [trap  ] dense=   1  final=   1  same          refuse to load an index built with a different model
+  [medium] dense=   1  final=   1  same          how does the cli compute the top 5 results?
+  [easy  ] dense=   1  final=   1  same          the command that indexes a repository
+  [medium] dense=   8  final=None  outside_top5  where do we measure how long embedding takes?
+  [trap  ] dense=   5  final=   5  same          cosine similarity against all vectors
+  [easy  ] dense=   1  final=   1  same          where do we print chunk statistics?
+  [medium] dense=   1  final=   1  same          print the syntax tree structure for debugging
+  [easy  ] dense=   1  final=   1  same          what does repo_reader.py do?
+  [medium] dense=   4  final=   4  same          project design notes and decision log
+  [medium] dense=   7  final=None  outside_top5  how do we sample memory usage during indexing?
+  [trap  ] dense=   1  final=   1  same          watch the RAM while the model runs
+  [medium] dense=   1  final=   1  same          how does the eval decide if a result is correct?
+  [easy  ] dense=   1  final=   1  same          where are recall and MRR calculated?
+  [easy  ] dense=   3  final=   3  same          how does the chunker read the contents of a file?
+  [easy  ] dense=   1  final=   1  same          where are the command line arguments parsed?
+  [medium] dense=   1  final=   1  same          the class that re-orders retrieved chunks with a cross-encoder
+  [medium] dense=   2  final=   2  same          where does the reranker combine the bi-encoder and cross-encoder orderings?
+  [trap  ] dense=   2  final=   2  same          the reranker
+  outside_top5=8  same=37
+
+rescue swaps: none
+
+overall    recall@5=0.82  hit@1=0.53  mrr=0.65   (n=45)
+easy      recall@5=0.95  hit@1=0.68  mrr=0.79   (n=19)
+medium    recall@5=0.76  hit@1=0.53  mrr=0.62   (n=17)
+trap      recall@5=0.67  hit@1=0.22  mrr=0.41   (n=9)
+
+query latency  p50=476ms  p95=622ms   (model load excluded)
+
+missed (answer not in top 5):
+  [medium] make sure virtual environments don't get indexed
+  [trap] the file crawler
+  [trap] how do we chunk markdown files?
+  [trap] why is the model loaded in float32?
+  [medium] how are search queries embedded differently from code chunks?
+  [easy] where is the instruction prefix added?
+  [medium] where do we measure how long embedding takes?
+  [medium] how do we sample memory usage during indexing?
+
+why: every query that didn't rank 1, vs the dense top-5  (delta = how much it beat the answer by)
+
+[trap] how does the chunker handle decorated function?
+  answer  0.641 dense=2  indexer/chunker.py  _walk   overlap(3): chunker decorated function
+  #1    0.682 +0.041  indexer/chunker.py  Chunk   overlap(2): chunker function
+  #2    0.641 +0.000  indexer/chunker.py  _walk   overlap(3): chunker decorated function
+  #3    0.605 -0.036  indexer/chunker.py  ChunkCode   overlap(3): chunker decorated function
+  #4    0.580 -0.061  indexer/chunker.py  chunk_file   overlap(1): chunker
+  #5    0.571 -0.070  indexer/embedder.py  chunk_to_text   overlap(0): -
+
+[medium] make sure virtual environments don't get indexed
+  answer  0.424 dense=9  indexer/repo_reader.py  read_repository   overlap(0): -
+  #1    0.502 +0.078  indexer/repo_reader.py  repo_reader   overlap(0): -
+  #2    0.493 +0.070  storage/baseline.py  load_index   overlap(0): -
+  #3    0.493 +0.069  cli.py  cmd_index   overlap(0): -
+  #4    0.472 +0.048  storage/baseline.py  save_index   overlap(0): -
+  #5    0.471 +0.047  indexer/chunker.py  __init__   overlap(0): -
+
+[trap] the file crawler
+  answer  0.420 dense=18  indexer/repo_reader.py  read_repository   overlap(1): file
+  #1    0.528 +0.108  indexer/repo_reader.py  repo_reader   overlap(0): -
+  #2    0.527 +0.108  indexer/chunker.py  chunk_file   overlap(1): file
+  #3    0.513 +0.093  indexer/chunker.py  Chunk   overlap(0): -
+  #4    0.503 +0.083  indexer/chunker.py  chunk_repo   overlap(1): file
+  #5    0.502 +0.082  cli.py  cmd_index   overlap(0): -
+
+[trap] recursion over the parse tree
+  answer  0.468 dense=2  indexer/chunker.py  _walk   overlap(0): -
+  #1    0.471 +0.003  tests/smoke_ts.py  dump   overlap(0): -
+  #2    0.468 +0.000  indexer/chunker.py  _walk   overlap(0): -
+  #3    0.441 -0.027  docs/upstream-comment-draft.md  fallback   overlap(2): parse tree
+  #4    0.430 -0.038  README.md  fallback   overlap(1): tree
+  #5    0.400 -0.068  README.md  fallback   overlap(1): tree
+
+[medium] what happens to files that cannot be parsed?
+  answer  0.492 dense=3  indexer/chunker.py  _fallback_chunks   overlap(0): -
+  #1    0.556 +0.064  indexer/chunker.py  chunk_source   overlap(0): -
+  #2    0.494 +0.002  indexer/chunker.py  Chunk   overlap(0): -
+  #3    0.492 +0.000  indexer/chunker.py  _fallback_chunks   overlap(0): -
+  #4    0.488 -0.005  docs/design-notes.md  fallback   overlap(2): cannot files
+  #5    0.482 -0.010  indexer/chunker.py  chunk_repo   overlap(1): files
+
+[trap] how do we chunk markdown files?
+  answer  0.634 dense=8  indexer/chunker.py  _fallback_chunks   overlap(1): chunk
+  #1    0.756 +0.122  indexer/chunker.py  _section_chunks   overlap(3): chunk files markdown
+  #2    0.736 +0.102  indexer/chunker.py  ChunkCode   overlap(3): chunk files markdown
+  #3    0.678 +0.044  indexer/chunker.py  Chunk   overlap(1): chunk
+  #4    0.670 +0.036  indexer/chunker.py  chunk_file   overlap(1): chunk
+  #5    0.667 +0.034  indexer/embedder.py  chunk_to_text   overlap(1): chunk
+
+[easy] split a file into fixed-size windows of lines
+  answer  0.554 dense=2  indexer/chunker.py  _fallback_chunks   overlap(1): lines
+  #1    0.563 +0.009  indexer/chunker.py  _section_chunks   overlap(3): file lines windows
+  #2    0.554 +0.000  indexer/chunker.py  _fallback_chunks   overlap(1): lines
+  #3    0.538 -0.016  indexer/chunker.py  chunk_file   overlap(1): file
+  #4    0.503 -0.051  indexer/chunker.py  Chunk   overlap(0): -
+  #5    0.484 -0.071  indexer/chunker.py  chunk_repo   overlap(1): file
+
+[medium] which function processes every file in the repository?
+  answer  0.556 dense=2  indexer/chunker.py  chunk_repo   overlap(1): file
+  #1    0.622 +0.067  indexer/repo_reader.py  repo_reader   overlap(1): repository
+  #2    0.556 +0.000  indexer/chunker.py  chunk_repo   overlap(1): file
+  #3    0.541 -0.015  indexer/repo_reader.py  read_repository   overlap(2): file repository
+  #4    0.540 -0.016  cli.py  cmd_index   overlap(1): repository
+  #5    0.474 -0.082  README.md  fallback   overlap(2): file repository
+
+[easy] where are Chunk objects created?
+  answer  0.590 dense=4  indexer/chunker.py  _emit   overlap(1): chunk
+  #1    0.671 +0.081  indexer/chunker.py  Chunk   overlap(1): chunk
+  #2    0.605 +0.015  indexer/embedder.py  chunk_to_text   overlap(1): chunk
+  #3    0.598 +0.008  indexer/chunker.py  chunk_source   overlap(1): chunk
+  #4    0.590 +0.000  indexer/chunker.py  _emit   overlap(1): chunk
+  #5    0.569 -0.021  indexer/chunker.py  _fallback_chunks   overlap(1): chunk
+
+[trap] why is the model loaded in float32?
+  answer  0.440 dense=6  indexer/embedder.py  Embedder   overlap(2): float32 model
+  #1    0.599 +0.159  indexer/embedder.py  __init__   overlap(2): float32 model
+  #2    0.524 +0.084  search/retrieve.py  __init__   overlap(1): model
+  #3    0.474 +0.034  tests/repro_embed.py  repro_embed   overlap(0): -
+  #4    0.472 +0.031  storage/baseline.py  load_index   overlap(1): model
+  #5    0.454 +0.013  docs/design-notes.md  fallback   overlap(1): model
+
+[easy] how are chunk texts turned into vectors?
+  answer  0.631 dense=3  indexer/embedder.py  embed_texts   overlap(1): texts
+  #1    0.676 +0.045  indexer/embedder.py  chunk_to_text   overlap(1): chunk
+  #2    0.656 +0.025  docs/design-notes.md  fallback   overlap(3): chunk texts vectors
+  #3    0.631 +0.000  indexer/embedder.py  embed_texts   overlap(1): texts
+  #4    0.629 -0.002  storage/baseline.py  save_index   overlap(2): chunk vectors
+  #5    0.617 -0.015  storage/baseline.py  load_index   overlap(2): chunk vectors
+
+[medium] how are search queries embedded differently from code chunks?
+  answer  0.568 dense=13  indexer/embedder.py  embed_query   overlap(0): -
+  #1    0.683 +0.115  README.md  fallback   overlap(2): code search
+  #2    0.675 +0.107  docs/design-notes.md  fallback   overlap(4): chunks code queries search
+  #3    0.649 +0.081  README.md  fallback   overlap(4): chunks code queries search
+  #4    0.633 +0.065  docs/design-notes.md  fallback   overlap(2): chunks search
+  #5    0.620 +0.052  cli.py  cmd_search   overlap(2): chunks search
+
+[easy] where is the instruction prefix added?
+  answer  0.324 dense=8  indexer/embedder.py  embed_query   overlap(1): instruction
+  #1    0.375 +0.051  search/retrieve.py  key   overlap(0): -
+  #2    0.370 +0.046  indexer/chunker.py  Chunk   overlap(0): -
+  #3    0.369 +0.045  README.md  fallback   overlap(0): -
+  #4    0.336 +0.011  README.md  fallback   overlap(2): instruction prefix
+  #5    0.329 +0.004  indexer/repo_reader.py  repo_reader   overlap(0): -
+
+[easy] how does search load the saved index?
+  answer  0.604 dense=2  storage/baseline.py  load_index   overlap(2): index load
+  #1    0.629 +0.026  cli.py  cmd_search   overlap(3): index load search
+  #2    0.604 +0.000  storage/baseline.py  load_index   overlap(2): index load
+  #3    0.579 -0.025  docs/design-notes.md  fallback   overlap(3): index load search
+  #4    0.544 -0.060  README.md  fallback   overlap(3): index load search
+  #5    0.518 -0.086  docs/design-notes.md  fallback   overlap(3): index load search
+
+[medium] where do we measure how long embedding takes?
+  answer  0.541 dense=8  cli.py  cmd_index   overlap(1): embedding
+  #1    0.654 +0.113  tests/repro_embed.py  repro_embed   overlap(1): embedding
+  #2    0.609 +0.068  search/retrieve.py  __init__   overlap(0): -
+  #3    0.606 +0.065  indexer/embedder.py  Embedder   overlap(0): -
+  #4    0.588 +0.047  indexer/embedder.py  embed_query   overlap(0): -
+  #5    0.584 +0.044  evaluation/run_eval.py  metrics   overlap(0): -
+
+[trap] cosine similarity against all vectors
+  answer  0.442 dense=5  cli.py  cmd_search   overlap(1): vectors
+  #1    0.493 +0.052  evaluation/run_eval.py  metrics   overlap(0): -
+  #2    0.468 +0.026  search/retrieve.py  ranks   overlap(0): -
+  #3    0.461 +0.019  search/retrieve.py  rerank   overlap(2): all cosine
+  #4    0.458 +0.016  storage/baseline.py  save_index   overlap(1): vectors
+  #5    0.442 +0.000  cli.py  cmd_search   overlap(1): vectors
+
+[medium] project design notes and decision log
+  answer  0.403 dense=4  docs/design-notes.md  fallback   overlap(2): design notes
+  #1    0.423 +0.021  evaluation/sample_chunks.py  fallback   overlap(2): design notes
+  #2    0.416 +0.013  README.md  fallback   overlap(1): project
+  #3    0.412 +0.009  cli.py  cmd_index   overlap(0): -
+  #4    0.403 +0.000  docs/design-notes.md  fallback   overlap(2): design notes
+  #5    0.401 -0.002  docs/design-notes.md  fallback   overlap(5): decision design log notes project
+
+[medium] how do we sample memory usage during indexing?
+  answer  0.494 dense=7  cli.py  track_peak_rss   overlap(1): memory
+  #1    0.546 +0.052  evaluation/sample_chunks.py  fallback   overlap(1): sample
+  #2    0.531 +0.037  docs/design-notes.md  fallback   overlap(1): indexing
+  #3    0.530 +0.036  docs/design-notes.md  fallback   overlap(3): during memory sample
+  #4    0.521 +0.027  cli.py  cmd_index   overlap(0): -
+  #5    0.517 +0.023  README.md  fallback   overlap(1): indexing
+
+[easy] how does the chunker read the contents of a file?
+  answer  0.683 dense=3  indexer/chunker.py  read_file   overlap(3): chunker file read
+  #1    0.733 +0.050  indexer/chunker.py  chunk_file   overlap(3): chunker file read
+  #2    0.690 +0.007  indexer/chunker.py  Chunk   overlap(1): chunker
+  #3    0.683 +0.000  indexer/chunker.py  read_file   overlap(3): chunker file read
+  #4    0.655 -0.029  indexer/chunker.py  chunk_repo   overlap(3): chunker file read
+  #5    0.653 -0.030  indexer/chunker.py  ChunkCode   overlap(3): chunker file read
+
+[medium] where does the reranker combine the bi-encoder and cross-encoder orderings?
+  answer  0.739 dense=2  search/retrieve.py  rerank   overlap(3): bi cross encoder
+  #1    0.775 +0.036  search/retrieve.py  Reranker   overlap(4): bi cross encoder reranker
+  #2    0.739 +0.000  search/retrieve.py  rerank   overlap(3): bi cross encoder
+  #3    0.725 -0.014  docs/design-notes.md  fallback   overlap(4): bi cross encoder reranker
+  #4    0.695 -0.043  README.md  fallback   overlap(3): bi encoder reranker
+  #5    0.679 -0.060  docs/design-notes.md  fallback   overlap(3): bi encoder reranker
+
+[trap] the reranker
+  answer  0.735 dense=2  search/retrieve.py  Reranker   overlap(1): reranker
+  #1    0.749 +0.014  search/retrieve.py  rerank   overlap(0): -
+  #2    0.735 +0.000  search/retrieve.py  Reranker   overlap(1): reranker
+  #3    0.671 -0.064  docs/design-notes.md  fallback   overlap(1): reranker
+  #4    0.663 -0.072  README.md  fallback   overlap(1): reranker
+  #5    0.652 -0.083  docs/design-notes.md  fallback   overlap(1): reranker
+
+per-query details (rank != 1):
+
+[rank 2] [trap] how does the chunker handle decorated function?
+    1. 0.682  indexer/chunker.py    Chunk
+    2. 0.641  indexer/chunker.py    _walk  <-- answer
+    3. 0.605  indexer/chunker.py    ChunkCode
+    4. 0.580  indexer/chunker.py    chunk_file
+    5. 0.571  indexer/embedder.py    chunk_to_text
+
+[rank None] [medium] make sure virtual environments don't get indexed
+    1. 0.502  indexer/repo_reader.py    repo_reader
+    2. 0.493  storage/baseline.py    load_index
+    3. 0.493  cli.py    cmd_index
+    4. 0.472  storage/baseline.py    save_index
+    5. 0.471  indexer/chunker.py    __init__
+
+[rank None] [trap] the file crawler
+    1. 0.528  indexer/repo_reader.py    repo_reader
+    2. 0.527  indexer/chunker.py    chunk_file
+    3. 0.513  indexer/chunker.py    Chunk
+    4. 0.503  indexer/chunker.py    chunk_repo
+    5. 0.502  cli.py    cmd_index
+
+[rank 2] [trap] recursion over the parse tree
+    1. 0.471  tests/smoke_ts.py    dump
+    2. 0.468  indexer/chunker.py    _walk  <-- answer
+    3. 0.441  docs/upstream-comment-draft.md    fallback
+    4. 0.430  README.md    fallback
+    5. 0.400  README.md    fallback
+
+[rank 3] [medium] what happens to files that cannot be parsed?
+    1. 0.556  indexer/chunker.py    chunk_source
+    2. 0.494  indexer/chunker.py    Chunk
+    3. 0.492  indexer/chunker.py    _fallback_chunks  <-- answer
+    4. 0.488  docs/design-notes.md    fallback
+    5. 0.482  indexer/chunker.py    chunk_repo
+
+[rank None] [trap] how do we chunk markdown files?
+    1. 0.756  indexer/chunker.py    _section_chunks
+    2. 0.736  indexer/chunker.py    ChunkCode
+    3. 0.678  indexer/chunker.py    Chunk
+    4. 0.670  indexer/chunker.py    chunk_file
+    5. 0.667  indexer/embedder.py    chunk_to_text
+
+[rank 2] [easy] split a file into fixed-size windows of lines
+    1. 0.563  indexer/chunker.py    _section_chunks
+    2. 0.554  indexer/chunker.py    _fallback_chunks  <-- answer
+    3. 0.538  indexer/chunker.py    chunk_file
+    4. 0.503  indexer/chunker.py    Chunk
+    5. 0.484  indexer/chunker.py    chunk_repo
+
+[rank 2] [medium] which function processes every file in the repository?
+    1. 0.622  indexer/repo_reader.py    repo_reader
+    2. 0.556  indexer/chunker.py    chunk_repo  <-- answer
+    3. 0.541  indexer/repo_reader.py    read_repository
+    4. 0.540  cli.py    cmd_index
+    5. 0.474  README.md    fallback
+
+[rank 4] [easy] where are Chunk objects created?
+    1. 0.671  indexer/chunker.py    Chunk
+    2. 0.605  indexer/embedder.py    chunk_to_text
+    3. 0.598  indexer/chunker.py    chunk_source
+    4. 0.590  indexer/chunker.py    _emit  <-- answer
+    5. 0.569  indexer/chunker.py    _fallback_chunks
+
+[rank None] [trap] why is the model loaded in float32?
+    1. 0.599  indexer/embedder.py    __init__
+    2. 0.524  search/retrieve.py    __init__
+    3. 0.474  tests/repro_embed.py    repro_embed
+    4. 0.472  storage/baseline.py    load_index
+    5. 0.454  docs/design-notes.md    fallback
+
+[rank 3] [easy] how are chunk texts turned into vectors?
+    1. 0.676  indexer/embedder.py    chunk_to_text
+    2. 0.656  docs/design-notes.md    fallback
+    3. 0.631  indexer/embedder.py    embed_texts  <-- answer
+    4. 0.629  storage/baseline.py    save_index
+    5. 0.617  storage/baseline.py    load_index
+
+[rank None] [medium] how are search queries embedded differently from code chunks?
+    1. 0.683  README.md    fallback
+    2. 0.675  docs/design-notes.md    fallback
+    3. 0.649  README.md    fallback
+    4. 0.633  docs/design-notes.md    fallback
+    5. 0.620  cli.py    cmd_search
+
+[rank None] [easy] where is the instruction prefix added?
+    1. 0.375  search/retrieve.py    key
+    2. 0.370  indexer/chunker.py    Chunk
+    3. 0.369  README.md    fallback
+    4. 0.336  README.md    fallback
+    5. 0.329  indexer/repo_reader.py    repo_reader
+
+[rank 2] [easy] how does search load the saved index?
+    1. 0.629  cli.py    cmd_search
+    2. 0.604  storage/baseline.py    load_index  <-- answer
+    3. 0.579  docs/design-notes.md    fallback
+    4. 0.544  README.md    fallback
+    5. 0.518  docs/design-notes.md    fallback
+
+[rank None] [medium] where do we measure how long embedding takes?
+    1. 0.654  tests/repro_embed.py    repro_embed
+    2. 0.609  search/retrieve.py    __init__
+    3. 0.606  indexer/embedder.py    Embedder
+    4. 0.588  indexer/embedder.py    embed_query
+    5. 0.584  evaluation/run_eval.py    metrics
+
+[rank 5] [trap] cosine similarity against all vectors
+    1. 0.493  evaluation/run_eval.py    metrics
+    2. 0.468  search/retrieve.py    ranks
+    3. 0.461  search/retrieve.py    rerank
+    4. 0.458  storage/baseline.py    save_index
+    5. 0.442  cli.py    cmd_search  <-- answer
+
+[rank 4] [medium] project design notes and decision log
+    1. 0.423  evaluation/sample_chunks.py    fallback
+    2. 0.416  README.md    fallback
+    3. 0.412  cli.py    cmd_index
+    4. 0.403  docs/design-notes.md    fallback  <-- answer
+    5. 0.401  docs/design-notes.md    fallback  <-- answer
+
+[rank None] [medium] how do we sample memory usage during indexing?
+    1. 0.546  evaluation/sample_chunks.py    fallback
+    2. 0.531  docs/design-notes.md    fallback
+    3. 0.530  docs/design-notes.md    fallback
+    4. 0.521  cli.py    cmd_index
+    5. 0.517  README.md    fallback
+
+[rank 3] [easy] how does the chunker read the contents of a file?
+    1. 0.733  indexer/chunker.py    chunk_file
+    2. 0.690  indexer/chunker.py    Chunk
+    3. 0.683  indexer/chunker.py    read_file  <-- answer
+    4. 0.655  indexer/chunker.py    chunk_repo
+    5. 0.653  indexer/chunker.py    ChunkCode
+
+[rank 2] [medium] where does the reranker combine the bi-encoder and cross-encoder orderings?
+    1. 0.775  search/retrieve.py    Reranker
+    2. 0.739  search/retrieve.py    rerank  <-- answer
+    3. 0.725  docs/design-notes.md    fallback
+    4. 0.695  README.md    fallback
+    5. 0.679  docs/design-notes.md    fallback
+
+[rank 2] [trap] the reranker
+    1. 0.749  search/retrieve.py    rerank
+    2. 0.735  search/retrieve.py    Reranker  <-- answer
+    3. 0.671  docs/design-notes.md    fallback
+    4. 0.663  README.md    fallback
+    5. 0.652  docs/design-notes.md    fallback
+  chunks.jsonl        76.9 KB
+  meta.json            0.1 KB
+  vectors.npy        216.1 KB
+index storage: 293.2 KB

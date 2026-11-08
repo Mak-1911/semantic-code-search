@@ -15,7 +15,7 @@ RERANKER_NAME = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 CANDIDATES = 20  # stage-1 pool fed to the reranker
 ALPHA_CE = 0.7   # weight of the cross-encoder's order vs the bi-encoder's
 CODE_KINDS = {"function", "class", "docstring"}  # prose fallbacks never enter the pool
-
+RESCUE_SLOT = 5  # only this position of the dense top-5 is contestable
 
 class Reranker:
     """Stage 2: read (query, chunk) pairs jointly, re-order the stage-1 pool.
@@ -67,7 +67,45 @@ class Reranker:
         ranked = [(pool[i][0], float(ce[i])) for i in order]
         return ranked + prose
 
+    def rescue(self, query: str, candidates: list[tuple[Chunk, float]]):
+        """Rescue-mode CE: never reorders, never demotes.
+        Slots 1-4 of the dense order are untouchable. A candidate from the 
+        pool tail swaps into the last slot only if the CE logit beats every code
+        chunk in the dense top-5. Prose holds no logit, so it never blocks a rescue
+        Returns (top5, swaps) — swaps: (query-side context filled in by the caller),
+        one entry per swap.
+        """
+        pool = [(c, s) for c, s in candidates if c.kind in CODE_KINDS]
+        if not pool:
+            return candidates[:RESCUE_SLOT], []
 
+        pairs = [(query, chunk_to_text(c)) for c, _ in pool]
+        ce = self.model.predict(pairs, batch_size=8, convert_to_numpy=True)
+
+        def key(c):
+            return (c.path, c.start_line, c.name)
+
+        top5 = candidates[:RESCUE_SLOT]
+        inside = {key(c) for c, _ in top5 if c.kind in CODE_KINDS}
+        inside_max = max(
+            (float(ce[i]) for i, (c, _) in enumerate(pool) if key(c) in inside),
+            default=float("-inf"),
+        )
+
+        swaps = []
+        best = None
+        for i, (c, s) in enumerate(pool):
+            if key(c) in inside:
+                continue
+            if float(ce[i]) > inside_max and (best is None or ce[i] > best[0]):
+                best = (float(ce[i]), i, s)
+        if best is not None:
+            ce_best, i, dense_score = best
+            evicted = top5[-1]
+            swaps.append((key(evicted[0]), key(pool[i][0]), ce_best, dense_score))
+            top5 = top5[:-1] + [(pool[i][0], dense_score)]
+        return top5, swaps
+            
 if __name__ == "__main__":
     from indexer.chunker import ChunkCode
 

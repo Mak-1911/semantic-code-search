@@ -1,0 +1,70 @@
+RSS: 2759 MB
+
+stage attribution (pool=20, dense only):
+  [trap  ] dense=   2  final=   2  same          how does the chunker handle decorated function?
+  [easy  ] dense=   1  final=   1  same          where do we skip directories when walking the repository?
+  [easy  ] dense=   1  final=   1  same          how are .venv and node_modules excluded from indexing?
+  [medium] dense=  11  final=None  outside_top5  make sure virtual environments don't get indexed
+  [trap  ] dense=  21  final=None  beyond pool   the file crawler
+  [medium] dense=   1  final=   1  same          which files are eligible for the search index?
+  [easy  ] dense=   1  final=   1  same          where do we traverse the syntax tree to find definitions?
+  [trap  ] dense=   4  final=   4  same          recursion over the parse tree
+  [medium] dense=   6  final=None  outside_top5  what happens to files that cannot be parsed?
+  [trap  ] dense=   9  final=None  outside_top5  how do we chunk markdown files?
+  [easy  ] dense=   2  final=   2  same          split a file into fixed-size windows of lines
+  [medium] dense=   2  final=   2  same          which function processes every file in the repository?
+  [easy  ] dense=   1  final=   1  same          where is python source parsed into a syntax tree?
+  [medium] dense=   1  final=   1  same          how does one file become a list of chunks?
+  [easy  ] dense=   4  final=   4  same          where are Chunk objects created?
+  [easy  ] dense=   1  final=   1  same          how do we extract the name of a definition node?
+  [easy  ] dense=   1  final=   1  same          what fields does a chunk have?
+  [easy  ] dense=   1  final=   1  same          where is the embedding model loaded into memory?
+  [trap  ] dense=   7  final=None  outside_top5  why is the model loaded in float32?
+  [easy  ] dense=   2  final=   2  same          how are chunk texts turned into vectors?
+  [medium] dense=   1  final=   1  same          encode a batch of texts as embeddings
+  [medium] dense=  13  final=None  outside_top5  how are search queries embedded differently from code chunks?
+  [easy  ] dense=   9  final=None  outside_top5  where is the instruction prefix added?
+  [medium] dense=   1  final=   1  same          how is the embedding input text composed from a chunk?
+  [easy  ] dense=   1  final=   1  same          how are vectors saved to disk?
+  [medium] dense=   1  final=   1  same          write the index into the .index directory
+  [easy  ] dense=   3  final=   3  same          how does search load the saved index?
+  [trap  ] dense=   1  final=   1  same          refuse to load an index built with a different model
+  [medium] dense=   1  final=   1  same          how does the cli compute the top 5 results?
+  [easy  ] dense=   1  final=   1  same          the command that indexes a repository
+  [medium] dense=   9  final=None  outside_top5  where do we measure how long embedding takes?
+  [trap  ] dense=   5  final=   5  same          cosine similarity against all vectors
+  [easy  ] dense=   1  final=   1  same          where do we print chunk statistics?
+  [medium] dense=   1  final=   1  same          print the syntax tree structure for debugging
+  [easy  ] dense=   1  final=   1  same          what does repo_reader.py do?
+  [medium] dense=   2  final=   2  same          project design notes and decision log
+  [medium] dense=   8  final=None  outside_top5  how do we sample memory usage during indexing?
+  [trap  ] dense=   1  final=   1  same          watch the RAM while the model runs
+  [medium] dense=   1  final=   1  same          how does the eval decide if a result is correct?
+  [easy  ] dense=   1  final=   1  same          where are recall and MRR calculated?
+  [easy  ] dense=   3  final=   3  same          how does the chunker read the contents of a file?
+  [easy  ] dense=   1  final=   1  same          where are the command line arguments parsed?
+  [medium] dense=   1  final=   1  same          the class that re-orders retrieved chunks with a cross-encoder
+  [medium] dense=   2  final=   2  same          where does the reranker combine the bi-encoder and cross-encoder orderings?
+  [trap  ] dense=   2  final=   2  same          the reranker
+  beyond pool=1  outside_top5=8  same=36
+    beyond_pool dense ranks: [21]
+
+rescue swaps: none
+
+overall    recall@5=0.80  hit@1=0.53  mrr=0.64   (n=45)
+easy      recall@5=0.95  hit@1=0.68  mrr=0.79   (n=19)
+medium    recall@5=0.71  hit@1=0.53  mrr=0.62   (n=17)
+trap      recall@5=0.67  hit@1=0.22  mrr=0.38   (n=9)
+
+query latency  p50=460ms  p95=669ms   (model load excluded)
+
+missed (answer not in top 5):
+  [medium] make sure virtual environments don't get indexed
+  [trap] the file crawler
+  [medium] what happens to files that cannot be parsed?
+  [trap] how do we chunk markdown files?
+  [trap] why is the model loaded in float32?
+  [medium] how are search queries embedded differently from code chunks?
+  [easy] where is the instruction prefix added?
+  [medium] where do we measure how long embedding takes?
+  [medium] how do

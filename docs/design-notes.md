@@ -167,11 +167,13 @@ must grow with it.
 - Fallback chunking path exercised on real input (2 windows from
   `docs/design-notes.md`) — works.
 - Two independent native segfault cases — see "Case file: native segfaults".
-- Empty-file hole (found by the first foreign repo): a file that parses
-  cleanly but yields no definitions — an empty `__init__.py` is the everyday
-  real-world case — silently produces zero chunks, violating invariant 4.
-  Fix (pending): when the tree-sitter walk yields nothing, emit a fallback
-  window anyway.
+- Empty-file hole — **fixed 2026-11-01** (found by the first foreign repo: a
+  file that parses cleanly but yields no definitions — an empty `__init__.py`
+  is the everyday real-world case — silently produced zero chunks, violating
+  invariant 4). Two-level guard at the end of `chunk_source`: walk yielded
+  nothing → `_fallback_chunks`; even the fallback empty (0-byte file) → one
+  synthetic chunk, `kind="fallback"`, `name` = file stem, `text=""` — the
+  stem is real signal for the embedder. DEMO oracle unchanged.
 - Old `scs/` venv disappeared during the first `uv add` run (unexplained;
   `.venv/` is now the standard layout anyway).
 
@@ -254,6 +256,158 @@ recorded deliberately: code-trained reranker (e.g. jina-reranker-v2-base-code),
 a fusion-weight sweep (skipped on purpose — tuning α against n=42 until it
 passes is overfitting the eval), fine-tuning a reranker on code pairs.
 
+## Drift update + empty-file fix (2026-11-01)
+
+Empty-file hole closed (see Open items): two-level guard at the end of
+`chunk_source`. Re-indexing to verify exposed the drift rule firing on our
+own repo: since the last index the codebase grew 37 → 47 chunks (README.md,
+docs/upstream-comment-draft.md, search/retrieve.py, the reranker-experiment
+section below — fallback windows went 2 → 13). The eval set grew with it,
+42 → 45 queries (Reranker class, rerank method, one bare-name trap).
+
+| metric | 37 chunks (2026-10-28) | 47 chunks (2026-11-01) |
+|---|---|---|
+| recall@5 | 0.88 | 0.82 |
+| hit@1 | 0.57 | 0.56 |
+| MRR | 0.69 | 0.66 |
+
+Coverage, not ranking, absorbed the hit — and the two new full misses are
+the prose-beats-code cause eating its own cooking: *"where is the
+instruction prefix added?"* and *"why is the model loaded in float32?"*
+now lose to README/design-notes windows that mention the same words more
+prominently than the code does. Prose windows are 13 of 47 chunks and are
+the standing distractor class — the strongest argument yet for the round-2
+candidates (hybrid lexical+dense retrieval, a code-trained reranker).
+Lesson restated: published numbers must describe the exact code and index
+they were measured on.
+
+## Re-baseline (2026-11-02)
+
+Fresh measurement on the frozen exam after the 2026-11-01 drift: 45
+queries against the 47-chunk index, bi-encoder only. Verbatim eval output:
+
+```
+overall    recall@5=0.82  hit@1=0.56  mrr=0.66   (n=45)
+easy       recall@5=0.95  hit@1=0.74  mrr=0.81   (n=19)
+medium     recall@5=0.76  hit@1=0.53  mrr=0.62   (n=17)
+trap       recall@5=0.67  hit@1=0.22  mrr=0.41   (n=9)
+query latency  p50=373ms  p95=425ms   (model load excluded)
+```
+
+These are the new reference: 0.82 / 0.56 / 0.66 replaces the
+0.88 / 0.57 / 0.69 (p50 525 ms) quoted as the reranker-experiment
+baseline row — that row was measured on the pre-drift 37-chunk exam and
+is not comparable to this one.
+
+Latency honesty: the same machine measured p50 608 ms / p95 739 ms on the
+reranker-era run and 373 / 425 here. Same code path, same eval — the gap
+is machine-state noise, recorded once and not chased.
+
+Going-forward rule: experiments compare against 0.82 / 0.56 / 0.66 at
+this frozen exam, measured once — no tuning iterations against the set.
+If the codebase grows again, re-baseline rather than chase the drift.
+evaluation/results/2026-11-02-own.txt.
+
+## Second reranker: bge-reranker-base (2026-11-04)
+
+Round-2 candidate was `jinaai/jina-reranker-v2-base-code` (code-trained). It is
+**gone from HuggingFace** — 401 on the repo, absent from the jinaai org listing
+(models?author=jinaai&search=reranker). The multilingual sibling still exists but
+its remote `embedding.py` imports `create_position_ids_from_input_ids` as a
+module-level function; transformers 5.x keeps it only as a static method of
+`XLMRobertaEmbeddings`, so load dies in import. Patching would have meant
+maintaining a fork of remote code — the day-one lesson ("native support beats
+remote code") says no. `einops` was installed for that attempt and kept.
+
+Pulled instead: `BAAI/bge-reranker-base` (278M, XLM-RoBERTa, Apache-2.0,
+native load, no `trust_remote_code`). Same guards, same rank fusion (α=0.7),
+one measurement against the frozen exam:
+
+| stage | recall@5 | hit@1 | MRR | p50 | RSS |
+|---|---|---|---|---|---|
+| frozen baseline (bi-encoder only) | 0.82 | 0.56 | 0.66 | 373 ms | ~2.8 GB |
+| bge-reranker-base + guards | 0.82 | 0.49 | 0.61 | 5685 ms | 4136 MB |
+
+Per difficulty: easy 0.95/0.68/0.79, medium 0.71/0.35/0.47, trap 0.78/0.33/0.50.
+Decision gate ("hit@1 up AND recall@5 not down") **failed a third time.**
+
+Diagnosis — same failure mode as ms-marco lesson #2, now confirmed across two
+model families: **flat logits on weak pools.** The venv-exclusion query scored
+all 20 candidates ≤ 0.012 — the CE cannot discriminate, and scrambles answers
+stage-1 had placed correctly (medium hit@1 0.53 → 0.35). Logit magnitudes are
+not even monotone with answer quality (one query: non-answer 0.759, answer
+0.154). The one real win: **traps improved** (recall@5 0.67 → 0.78, hit@1
+0.22 → 0.33) — when candidates are genuinely comparable, joint query-chunk
+reading adds signal the bi-encoder lacks.
+
+Conclusion: the reranker is not the fix for this failure profile. The measured
+stage-1 problem stands (prose-beats-code, vocabulary hub). Round-2 candidates
+narrow to: markdown-aware prose chunking (header sections instead of 50-line
+fallback windows) and hybrid lexical+dense retrieval (BM25 + RRF, no tunable
+weight). Results: `evaluation/results/2026-11-04-own-rerank-bge.txt`.
+
+**Reverted the same day.** The bge trade — recall flat, hit@1 down, p50
+373 → 5685 ms — was declined: worse on every axis. `--rerank` runs ms-marco
+again and reproduces the documented 2026-11-01 experiment; bge survives only
+in this section and the results file. `einops` (pulled for the dead jina
+attempt) was dropped again.
+
+## Hybrid lexical+dense retrieval: BM25 + RRF (2026-11-06)
+
+Round-2 candidate: fuse exact-token matching with the dense ranking.
+`search/lexicon.py` (since deleted): tokenizer (lowercase; split at `_` and
+camelCase — "read_repository" → read, repository), Okapi BM25 (k1=1.5, b=0.75,
+Lucene-style IDF), Reciprocal Rank Fusion (k=60, dense ranks every chunk, BM25
+only chunks with overlap > 0, ties broken by corpus index). All three pinned
+by hand-computed oracles.
+
+Diagnostics before the eval (BM25-only top-5, two probe queries) — both
+predictions half-confirmed, half-inverted:
+
+- **Vocabulary hub: broken by IDF, as predicted.** The Chunk dataclass is
+  absent from the parse-tree query's top-5. The one falsifiable test passed.
+- **Prose: wins BM25 too.** The skip-dirs query's top-3 were README /
+  design-notes / upstream windows; the answer (`read_repository`) fell out of
+  top-5 entirely. Doc-phrased queries meet prose where their exact words live —
+  IDF only demotes corpus-common words, and "skip directories" is
+  prose-specific, not corpus-common.
+
+Eval (`--hybrid`, one run): **recall@5 0.62, hit@1 0.20, MRR 0.35** — gate
+failed catastrophically. Honest labeling per the standing rule: measured on
+the 49-chunk index (lexicon.py itself had been indexed — the drift rule fired
+mid-experiment, caught via the storage line: vectors 196.1 KB = 49 chunks vs
+188.1 KB = 47 that morning), so not directly comparable to the 0.82/0.56/0.66
+47-chunk reference. But the collapse is 20+ points, far beyond what +2 chunks
+can cause — the verdict stands on the code, not the excuse.
+
+Two mechanics the forecast missed, recorded because they generalize:
+
+1. **k=60 RRF is a near-uniform blend** (rank 1 → 1/61, rank 10 → 1/70 — a 7%
+   spread), so fusion ≈ rank averaging, and averaging with a much-worse
+   ranker lands below the better one. "Graceful degradation" only holds for
+   chunks the weak ranker *ignores* (score 0 → no bonus); chunks it actively
+   misranks still collect top-list bonuses — and BM25's top was
+   systematically prose.
+2. **The hub fix inverted.** The Chunk dataclass has zero lexical overlap
+   with "chunk" queries — `chunker` tokenizes to [chunker], stemless, never
+   [chunk] — so BM25 ranked the answer near-bottom while every chunker
+   path/name chunk scored high. Dense's #1 answer collected one bonus; a
+   prose window at BM25 #2 + dense #8 collected two.
+
+Lesson: **unweighted fusion is a bet that both rankers are comparably good** —
+the fusion partner must not share the target failure mode (here, both lose to
+prose on doc-phrased queries). Weighted fusion and a smaller k are the escape
+hatches; both are tuning against the frozen exam, refused per the standing
+rule.
+
+Reverted same day: `lexicon.py` deleted, `run_eval.py` restored to HEAD.
+Evidence: `evaluation/results/2026-11-06-own-hybrid.txt`. Standing consequence:
+prose windows are now the confirmed bottleneck under the bi-encoder, under a
+cross-encoder, and under fusion — markdown-aware chunking is the only
+remaining round-2 candidate with evidence behind it. `.index/` still holds the
+49-chunk state including the deleted lexicon.py — re-index before the next
+experiment.
+
 ## Case file: native segfaults (Windows, 2026-10-27)
 
 Native crashes print no traceback and `try/except` cannot catch them; only
@@ -329,3 +483,10 @@ at a time: input → code tweak → GC → Python version → dependency version
 - [x] Two-stage retrieval — built, measured, **regressed both eval sets**
       (see "Two-stage retrieval experiment"); ships off by default behind
       `--rerank` as a documented negative result
+- [x] Second reranker (bge-reranker-base, after the planned jina code reranker
+      turned out to be dead on HF) — gate failed a third time; swapped back to
+      ms-marco the same day (see "Second reranker: bge-reranker-base")
+- [x] Hybrid BM25 + RRF — built, measured, **gate failed catastrophically**
+      (recall@5 0.62, hit@1 0.20; see "Hybrid lexical+dense retrieval");
+      reverted same day, lexicon.py deleted. Prose windows confirmed as the
+      bottleneck under every ranking scheme tried on top of them

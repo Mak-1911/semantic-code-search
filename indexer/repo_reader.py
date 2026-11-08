@@ -30,6 +30,10 @@ def read_repository(root: Path) -> list[Path]:
         'dist'
     }
 
+    # No prose extensions (.md, .txt, .rst): in the embedding space docs
+    # out-compete the code they describe — 3 of 8 eval misses had a README/
+    # design-notes window sitting above the real function (2026-11-08).
+    # Documentation is a separate retrieval problem: own collection, own index.
     eligible_extensions = {
         '.js',
         '.ts',
@@ -39,8 +43,7 @@ def read_repository(root: Path) -> list[Path]:
         '.c',
         '.h',
         '.java',
-        '.rs',
-        '.md'
+        '.rs'
     }
 
     eligible_files = []

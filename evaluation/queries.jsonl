@@ -7,7 +7,7 @@
 {"query": "where do we traverse the syntax tree to find definitions?", "expected_path": "indexer/chunker.py", "expected_symbol": "_walk", "difficulty": "easy"}
 {"query": "recursion over the parse tree", "expected_path": "indexer/chunker.py", "expected_symbol": "_walk", "difficulty": "trap"}
 {"query": "what happens to files that cannot be parsed?", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "medium"}
-{"query": "how do we chunk markdown files?", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "trap"}
+{"query": "how do we chunk markdown files?", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "trap", "accepted_alternatives": [{"path": "indexer/chunker.py", "symbol": "chunk_repo"}]}
 {"query": "split a file into fixed-size windows of lines", "expected_path": "indexer/chunker.py", "expected_symbol": "_fallback_chunks", "difficulty": "easy"}
 {"query": "which function processes every file in the repository?", "expected_path": "indexer/chunker.py", "expected_symbol": "chunk_repo", "difficulty": "medium"}
 {"query": "where is python source parsed into a syntax tree?", "expected_path": "indexer/chunker.py", "expected_symbol": "chunk_source", "difficulty": "easy"}
@@ -16,7 +16,7 @@
 {"query": "how do we extract the name of a definition node?", "expected_path": "indexer/chunker.py", "expected_symbol": "_node_name", "difficulty": "easy"}
 {"query": "what fields does a chunk have?", "expected_path": "indexer/chunker.py", "expected_symbol": "Chunk", "difficulty": "easy"}
 {"query": "where is the embedding model loaded into memory?", "expected_path": "indexer/embedder.py", "expected_symbol": "Embedder", "difficulty": "easy"}
-{"query": "why is the model loaded in float32?", "expected_path": "indexer/embedder.py", "expected_symbol": "Embedder", "difficulty": "trap"}
+{"query": "why is the model loaded in float32?", "expected_path": "indexer/embedder.py", "expected_symbol": "Embedder", "difficulty": "trap", "accepted_alternatives": [{"path": "indexer/embedder.py", "symbol": "__init__"}]}
 {"query": "how are chunk texts turned into vectors?", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_texts", "difficulty": "easy"}
 {"query": "encode a batch of texts as embeddings", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_texts", "difficulty": "medium"}
 {"query": "how are search queries embedded differently from code chunks?", "expected_path": "indexer/embedder.py", "expected_symbol": "embed_query", "difficulty": "medium"}
@@ -40,3 +40,6 @@
 {"query": "where are recall and MRR calculated?", "expected_path": "evaluation/run_eval.py", "expected_symbol": "metrics", "difficulty": "easy"}
 {"query": "how does the chunker read the contents of a file?", "expected_path": "indexer/chunker.py", "expected_symbol": "read_file", "difficulty": "easy"}
 {"query": "where are the command line arguments parsed?", "expected_path": "cli.py", "expected_symbol": "main", "difficulty": "easy"}
+{"query": "the class that re-orders retrieved chunks with a cross-encoder", "expected_path": "search/retrieve.py", "expected_symbol": "Reranker", "difficulty": "medium"}
+{"query": "where does the reranker combine the bi-encoder and cross-encoder orderings?", "expected_path": "search/retrieve.py", "expected_symbol": "rerank", "difficulty": "medium"}
+{"query": "the reranker", "expected_path": "search/retrieve.py", "expected_symbol": "Reranker", "difficulty": "trap"}

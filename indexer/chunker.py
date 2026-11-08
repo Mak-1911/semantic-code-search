@@ -40,6 +40,17 @@ class ChunkCode:
         chunks: list[Chunk] = []
         tree = Parser(PY_LANGUAGE).parse(source)
         self._walk(tree.root_node, rel_path, chunks)
+        # invariant 4: nothing silently dropped — walk yielded nothing ->
+        # fallback windows; a truly empty file still gets one named chunk
+        # (the stem is real signal for the embedder)
+        if not chunks:
+            chunks.extend(self._fallback_chunks(
+                source.decode("utf-8", errors="replace"), rel_path))
+        if not chunks:
+            chunks.append(Chunk(
+                path=rel_path, start_line=1, end_line=1,
+                kind="fallback", name=Path(rel_path).stem, text="",
+            ))
         return chunks
 
     def chunk_repo(self, files: list[Path]) -> list[Chunk]:
@@ -71,7 +82,7 @@ class ChunkCode:
                     text = text,
                 ))
         return out
-            
+
     def _node_name(self, node: Node) -> str:
         name_node = node.child_by_field_name("name")
         return (

@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
 ![CPU only](https://img.shields.io/badge/hardware-CPU--only-informational)
 ![tree-sitter](https://img.shields.io/badge/parsing-tree--sitter-orange)
-![eval](https://img.shields.io/badge/recall@5-0.88–0.92-success)
+![eval](https://img.shields.io/badge/recall@5-0.82–0.92-success)
 
 A local-first semantic code search engine built from scratch: tree-sitter
 structural chunking → transformer embeddings → exact NumPy search → an
@@ -62,24 +62,24 @@ on mismatch; nothing silently dropped from the index.
 Two eval sets, hand-written queries with one expected `(path, symbol)` each,
 graded on top-5:
 
-- **own repo** — n=42 queries (easy / medium / trap), the codebase itself;
+- **own repo** — n=45 queries (easy / medium / trap), the codebase itself;
 - **foreign repo** — n=24 queries sampled from a real codebase this pipeline
   had never seen (sampled with a fixed seed so the set is reproducible);
   removes the self-authorship bias of writing queries against your own code.
 
-| metric    | own repo (n=42) | foreign repo (n=24) |
+| metric    | own repo (n=45) | foreign repo (n=24) |
 |-----------|-----------------|---------------------|
-| recall@5  | 0.88            | 0.92                |
-| hit@1     | 0.57            | 0.62                |
-| MRR       | 0.69            | 0.75                |
+| recall@5  | 0.82            | 0.92                |
+| hit@1     | 0.56            | 0.62                |
+| MRR       | 0.66            | 0.75                |
 
 Coverage is strong; ranking is the weak spot — and the gap *between* the two
 numbers is what drove every design decision below.
 
-Resources: indexing ≈ 3 min for 37 chunks on CPU (embedding dominates);
-query p50 ≈ 0.5 s (≈99% model inference — the matmul is microseconds); peak
-RSS ≈ 3 GB; index storage 150.7 KB, i.e. 4 KB/chunk → ~4 GB per million
-chunks, which is the argument for a compact binary index later.
+Resources: indexing ≈ 4.5 min for 47 chunks on CPU (embedding dominates);
+query p50 ≈ 0.37 s (≈99% model inference — the matmul is microseconds); peak
+RSS ≈ 3 GB; index storage ≈ 253 KB — ~4 KB/chunk vectorized → ~4 GB per
+million chunks, which is the argument for a compact binary index later.
 
 ## The interesting parts
 
@@ -116,9 +116,12 @@ field-name-dense chunk magnetically winning queries it can't answer), and
 
 **An eval that fights back.** Difficulty rubric with deliberately planted
 split-vote pairs and trap queries; a blind-sampled foreign validation set;
-and a recorded drift lesson — when the codebase grew 29 → 32 chunks,
-unchanged queries produced new distractors and hit@1 fell. An eval set is
-valid for exactly one version of the code.
+and a recorded drift lesson — when the codebase grows, unchanged queries
+produce new distractors. It has fired twice: at 29 → 32 chunks hit@1 fell;
+at 37 → 47 chunks (README, new modules, these docs — now indexed) recall@5
+dropped 0.88 → 0.82 as prose windows began outranking code, and the ground
+truth grew with the code before the numbers above were refreshed. An eval
+set is valid for exactly one version of the code.
 
 ## The reranker experiment: a measured negative result
 
@@ -133,7 +136,7 @@ attention judge the pair. Textbook also says it works. It didn't:
 | baseline (bi-encoder only)  | 0.88 / 0.92            | 0.57 / 0.62         | 0.5 s       |
 | + reranker, first attempt   | 0.62 / 0.62            | 0.43 / 0.46         | 3.2 s       |
 | + prose filter + rank fusion| 0.81 / 0.75            | 0.48 / 0.42         | 1.5 s       |
-
+those numbers pre-date the drift and aren't comparable to the current baseline.
 Three things were learned, each the hard way:
 
 1. **A general-text reranker reads prose better than code.** The ms-marco
@@ -175,7 +178,7 @@ python evaluation/run_eval.py --rerank --index-dir .index-other \
 
 ## Limitations, honestly
 
-- Eval sets are hand-written and small (n=42, n=24) — numbers are directional.
+- Eval sets are hand-written and small (n=45, n=24) — numbers are directional.
 - Full structural parsing for Python; 8 other extensions indexed as fallback
   windows only.
 - 0.6B fp32 model = ~3 GB RAM.
